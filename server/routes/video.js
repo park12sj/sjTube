@@ -5,7 +5,6 @@ const { Video } = require("../models/Video");
 const { auth } = require("../middleware/auth");
 const multer = require("multer")
 const ffmpeg = require('fluent-ffmpeg');
-const { response } = require('express');
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
