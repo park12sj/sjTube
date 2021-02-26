@@ -42,7 +42,9 @@ function Subscribe(props) {
             .then(response =>{
                 if(response){
                     setSubscriberNumber(SubscriberNumber-1)
-                    setSubscribed(!Subscribed)
+                    if (SubscriberNumber-1===0){
+                        setSubscribed(!Subscribed)
+                    }
                 }else{
                     alert('fail cancle subscribe')
                 }
