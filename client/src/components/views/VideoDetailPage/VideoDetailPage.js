@@ -3,6 +3,7 @@ import {Row, Col, List, Avatar} from 'antd'
 import axios from 'axios'
 import SideVideo from './Section/SideVideo'
 import Subscribe from './Section/Subscribe'
+import Comment from './Section/Comment'
 
 function VideoDetailPage(props) {
 
@@ -10,22 +11,37 @@ function VideoDetailPage(props) {
     const variable={videoId:videoId}
 
     const [VideoDetail, setVideoDetail] = useState([])
+    const [Comments, setComments] = useState([])
 
     useEffect(() => {
         axios.post('/api/video/getVideoDetail', variable)
         .then(response=>{
             if(response.data.success){
-                console.log(response.data)
                 setVideoDetail(response.data.videoDetail)
             }else{
                 alert('fail get video')
             }
         })
+
+        axios.post('/api/comment/getComments', variable)
+        .then(response=>{
+            if(response.data.success){
+                setComments(response.data.comments)
+            }else{
+                alert('fail get comment info')
+            }
+        })
     }, [])
+
+    const refreshFunction=(newComment)=>{
+        
+        setComments(Comments.concat(newComment))
+    }
 
     if(VideoDetail.writer){
 
         const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && <Subscribe userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')}/>
+
         return (
             <Row gutter={[16,16]}>
                 <Col lg={18} xs={24}>
@@ -41,7 +57,7 @@ function VideoDetailPage(props) {
                             />
                         </List.Item>
 
-                        {/* comment */}
+                        <Comment refreshFunction={refreshFunction} commentLists={Comments} postId={videoId}/>
                     </div>
                 </Col>
                 <Col lg={6} xs={24}>
